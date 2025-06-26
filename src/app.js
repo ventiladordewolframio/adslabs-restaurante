@@ -1,26 +1,23 @@
 require("dotenv").config({ path: ".env"})
-// Load the Express library
 const express = require('express');
 
 const ClientRouter = require('./routes/client');
 
-// Create an Express application
 const app = express();
-
-app.use(express.json()); // Middleware to parse JSON bodies
-// Use the client router for routes starting with /client
+app.use(express.json());
 app.use('/api/client', ClientRouter);
 
-// Define a route for the root URL
+
+// Standard routes for debugging
+// These routes are not part of the API, but are used to check if the server is running correctly.
 app.get('/', (req, res) => {
   res.send('Root is working!');
 });
-
 app.get('/api', (req, res) => {
   res.send('Root of the api is working!');
 });
 
-// Start the server
+// Starts the server
 app.listen(process.env.PORT, () => {
   console.log(`The server is running at \"http://localhost:${process.env.PORT}\" !!!`);
 });
