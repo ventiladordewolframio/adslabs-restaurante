@@ -2,13 +2,13 @@ const service = require("../services/client")
 const cpfUtils = require('cpf-utils')
 //* PARSING THE INPUTS AND SENDING OUTPUTS, VALIDATION ESSENTIALY
 
-function listClients(req, res) {
-    let result = service.listClientsFromDB(req.query)
-    //.then((emails) => {
-    //    return res.send({ dados: emails })
-    //})
-    console.log("Query Params: ", req.query)
-    return res.status(200).send({ dados: result })
+async function listAll(req, res) {
+    try {
+        const clients = await service.listAll(req.query);
+        return res.status(200).send({ dados: clients });
+    } catch (error) {
+        return res.status(500).send({ message: error.message });
+    }
 }
 
 async function create(req, res) {
@@ -29,49 +29,46 @@ async function create(req, res) {
     }
 }
 
-//function create(req, res) {
-//    service.create(req.body)
-//        .then((emailCriado) => {
-//            return res.status(201).send({
-//                message: "Novo email criado com sucesso",
-//                email: emailCriado
-//            })
-//        }, (error) => {
-//            return res.status(500).send({ message: error })
-//        })
-//}
-//
-//function update(req, res) {
-//    service.update(req.params.id, req.body)
-//        .then((emailEditado) => {
-//            if(!emailEditado)
-//                return res.send({ message: "Email não foi encontrado"})
-//
-//            return res.send({
-//                message: "Email editada com sucesso",
-//                email: emailEditado
-//            })
-//        }, (error) => {
-//            return res.status(500).send({ message: error })
-//        })
-//}
-//
-//function remove(req, res) {
-//    service.remove(req.params.id)
-//        .then((emailRemovido) => {
-//            if(!emailRemovido)
-//                return res.send({ message: "Email não foi encontrado"})
-//
-//            return res.send({
-//                message: "Email removido com sucesso",
-//                email: emailRemovido
-//            })
-//        }, (error) => {
-//            return res.status(500).send({ message: error })
-//        })
-//}
+async function update(req, res) {
+    const { name, cpf } = req.body;
+    const { id } = req.params;
+
+    if (!name && !cpf) {
+        return res.status(400).send({ message: "At least one of Name or CPF is required to update." });
+    }
+
+    if (cpf && !cpfUtils.isValid(cpf)) {
+        return res.status(400).send({ message: "CPF is invalid." });
+    }
+
+    try {
+        const updatedClient = await service.update(id, { name, cpf });
+        if (!updatedClient) {
+            return res.status(404).send({ message: "Cliente não encontrado" });
+        }
+        return res.status(200).send({ message: "Cliente atualizado com sucesso", client: updatedClient });
+    } catch (error) {
+        return res.status(500).send({ message: error.message });
+    }
+}
+
+async function remove(req, res) {
+    const { id } = req.params;
+
+    try {
+        const removedClient = await service.remove(id);
+        if (!removedClient) {
+            return res.status(404).send({ message: "Cliente não encontrado" });
+        }
+        return res.status(200).send({ message: "Cliente removido com sucesso", client: removedClient });
+    } catch (error) {
+        return res.status(500).send({ message: error.message });
+    }
+}
 
 module.exports = {
-    listClients,
-    create
+    listAll,
+    create,
+    update,
+    remove
 }

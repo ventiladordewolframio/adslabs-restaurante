@@ -7,15 +7,10 @@ const ClientRouter = express.Router();
 //    res.send('Client route is working!');
 //});
 
-ClientRouter.get("/", controller.listClients)
+ClientRouter.get("/", controller.listAll)
 ClientRouter.post("/", controller.create)
-//ClientRouter.put("/:id", controller.update)
-//ClientRouter.delete("/:id", controller.remove)
+ClientRouter.put("/:id", controller.update)
+ClientRouter.delete("/:id", controller.remove)
 
 
 module.exports = ClientRouter;
-
-// get    read only
-// post   create
-// put    update
-// delete delete

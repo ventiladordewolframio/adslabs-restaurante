@@ -2,13 +2,13 @@ const Client = require("../models/client")
 
 //* DIRECT DB CONNECTION AND STUFF
 
-function listClientsFromDB(queryParams) {
-    //return await Email.findAll({ where: queryParams })
-    return "testetstets"
+async function listAll(query = {}) {
+    // TODO needs a pagination version, and this one should be deprecated
+    const clients = await Client.findAll();
+    return clients;
 }
 
 async function create(dados) {
-    // dados should be an object like: { name: "João", cpf: "12345678900" }
     const novoClient = await Client.create({
         name: dados.name,
         cpf: dados.cpf
@@ -16,33 +16,33 @@ async function create(dados) {
     return novoClient
 }
 
-//async function create(dados) {
-//    const novoEmail = await Email.create(dados)
-//
-//    return novoEmail
-//}
-//
-//async function update(idEmail, dados) {
-//    const emailEncontrado = await Email.findByPk(idEmail)
-//
-//    if(emailEncontrado){
-//        emailEncontrado.email = dados.email ?? emailEncontrado.email
-//        emailEncontrado.pessoaId = dados.pessoaId ?? emailEncontrado.pessoaId
-//        await emailEncontrado.save();
-//    }
-//
-//    return emailEncontrado
-//}
-//
-//async function remove(idEmail) {
-//    const emailEncontrado = await Email.findByPk(idEmail)
-//    if(emailEncontrado)
-//        await emailEncontrado.destroy()
-//
-//    return emailEncontrado
-//}
+async function update(id, dados) {
+    const client = await Client.findByPk(id);
+
+    if (!client) {
+        return null;
+    }
+
+    // Only update fields if they are provided
+    if (dados.name !== undefined) client.name = dados.name;
+    if (dados.cpf !== undefined) client.cpf = dados.cpf;
+
+    await client.save();
+    return client;
+}
+
+async function remove(id) {
+    const client = await Client.findByPk(id);
+    if (!client) {
+        return null;
+    }
+    await client.destroy();
+    return client;
+}
 
 module.exports = {
-    listClientsFromDB,
+    listAll,
     create,
+    update,
+    remove
 }
