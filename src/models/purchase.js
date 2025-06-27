@@ -4,6 +4,8 @@ const database = require("../database/database")
 const Client = require("./client")
 const Item = require("./item")
 
+//* DEFINE THE PURCHASE MODEL TO BE USED IN THE DB
+
 const Purchase = database.define("purchases", {
     id: {
         type: Sequelize.INTEGER,

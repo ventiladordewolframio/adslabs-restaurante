@@ -1,5 +1,7 @@
 const Sequelize = require("sequelize")
 
+//* CREATES THE DB CONNECTION AND PASSES THAT TO OTHERS TO USE
+
 const database = new Sequelize(
     process.env.DB_NAME,
     process.env.DB_USER,
@@ -12,6 +14,8 @@ const database = new Sequelize(
 
 module.exports = database
 
-require("../models/pessoa")
-require("../models/email")
+require("../models/client")
+require("../models/item")
+require("../models/purchase")
+
 database.sync()

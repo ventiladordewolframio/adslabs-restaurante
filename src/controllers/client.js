@@ -1,5 +1,7 @@
 const service = require("../services/client")
 
+//* PARSING THE INPUTS AND SENDING OUTPUTS, VALIDATION ESSENTIALY
+
 function listClients(req, res) {
     let result = service.listClientsFromDB(req.query)
         //.then((emails) => {
