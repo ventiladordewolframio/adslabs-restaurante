@@ -4,11 +4,23 @@ const service = require("../services/client")
 
 function listClients(req, res) {
     let result = service.listClientsFromDB(req.query)
-        //.then((emails) => {
-        //    return res.send({ dados: emails })
-        //})
-        console.log("Query Params: ", req.query)
-        return res.status(200).send({dados: result})
+    //.then((emails) => {
+    //    return res.send({ dados: emails })
+    //})
+    console.log("Query Params: ", req.query)
+    return res.status(200).send({ dados: result })
+}
+
+function create(req, res) {
+    service.create(req.body)
+        .then((emailCriado) => {
+            return res.status(201).send({
+                message: "Novo email criado com sucesso",
+                email: emailCriado
+            })
+        }, (error) => {
+            return res.status(500).send({ message: error })
+        })
 }
 
 //function create(req, res) {
@@ -53,4 +65,7 @@ function listClients(req, res) {
 //        })
 //}
 
-module.exports = { listClients }
+module.exports = {
+    listClients,
+    createClient
+}
