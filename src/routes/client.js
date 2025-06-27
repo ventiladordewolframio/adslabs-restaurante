@@ -8,7 +8,7 @@ const ClientRouter = express.Router();
 //});
 
 ClientRouter.get("/", controller.listClients)
-//ClientRouter.post("/", controller.create)
+ClientRouter.post("/", controller.create)
 //ClientRouter.put("/:id", controller.update)
 //ClientRouter.delete("/:id", controller.remove)
 

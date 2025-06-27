@@ -1,5 +1,5 @@
 const service = require("../services/client")
-
+const cpfUtils = require('cpf-utils')
 //* PARSING THE INPUTS AND SENDING OUTPUTS, VALIDATION ESSENTIALY
 
 function listClients(req, res) {
@@ -11,16 +11,22 @@ function listClients(req, res) {
     return res.status(200).send({ dados: result })
 }
 
-function create(req, res) {
-    service.create(req.body)
-        .then((emailCriado) => {
-            return res.status(201).send({
-                message: "Novo email criado com sucesso",
-                email: emailCriado
-            })
-        }, (error) => {
-            return res.status(500).send({ message: error })
-        })
+async function create(req, res) {
+    const { name, cpf } = req.body
+    if (!name || !cpf) {
+        return res.status(400).send({ message: "Name and CPF are required." })
+    }
+
+    if (!cpfUtils.isValid(cpf)) {
+        return res.status(400).send({ message: "CPF is invalid." })
+    }
+
+    try {
+        const novoClient = await service.create({ name, cpf })
+        return res.status(201).send({ message: "Novo cliente criado com sucesso", client: novoClient })
+    } catch (error) {
+        return res.status(500).send({ message: error.message })
+    }
 }
 
 //function create(req, res) {
@@ -67,5 +73,5 @@ function create(req, res) {
 
 module.exports = {
     listClients,
-    createClient
+    create
 }
