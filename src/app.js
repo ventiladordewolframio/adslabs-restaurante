@@ -14,18 +14,7 @@ app.use('/api/client', ClientRouter);
 app.use('/api/item', ItemRouter);
 app.use('/api/purchase', PurchaseRouter);
 
-
-// Standard routes for debugging
-// These routes are not part of the API, but are used to check if the server is running correctly.
-app.get('/', (req, res) => {
-  res.send('Root is working!');
-});
-app.get('/api', (req, res) => {
-  res.send('Root of the api is working!');
-});
-
 // Starts the server
 app.listen(process.env.PORT, () => {
   console.log(`The server is running at \"http://localhost:${process.env.PORT}\" !!!`);
-  console.log(cpfUtils.generate(),cpfUtils.generate(),cpfUtils.generate(),cpfUtils.generate(),cpfUtils.generate(),cpfUtils.generate())
 });

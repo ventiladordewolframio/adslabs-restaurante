@@ -1,0 +1,101 @@
+# documentacao
+
+"<id>" representa o numero do id que sera substituido e nao parte da caminho
+
+## CLIENT
+
+GET /api/client/<id> : List Client by id
+- retorna apenas o obj de um cliente especificado pelo id
+
+GET /api/client?active=true : List all Clients
+- quando nao se insere o id ele retornara Todos os clientes
+- tem o parametro opcional active, true or false
+
+GET /api/client/top5orders?active=true : List all top 5 clients by order
+- quando especifica /top5orders retornara os 5 clientes que compraram mais produtos por unidade (nao por compra)
+- tem o parametro opcional active, true or false
+
+GET /api/client/top5spent?active=true : List all top 5 Clients by total spent
+- quando especificado /top5spent retorna os 5 clientes com mais dinheiro gasto total
+- tem o parametro opcional active, true or false
+
+POST /api/client : Create Client
+{
+  "name": "{% faker 'randomFullName' %}",
+  "cpf": "{% randocpf false %}"
+}
+- parametros faker do insomnia, com um plugin especifico pro cpf do Brasil
+
+PUT /api/client/<id> : Edit Client
+{
+  "name": "{% faker 'randomFullName' %}",
+  "cpf": "{% randocpf false %}"
+}
+- Todas as edicoes suportam modificar apenas os parametros que foram passados
+- parametros faker do insomnia, com um plugin especifico pro cpf do Brasil
+
+DELETE /api/client/<id> : Soft Delete Client
+- active = false
+
+## ITEM
+
+GET /api/item/<id> : List Item by id
+- retorna apenas o obj de um item especificado pelo id
+
+GET /api/item : List All Items
+- quando nao se insere o id ele retornara Todos os items
+
+GET /api/item/top : List All Items by Order Quantity
+- é usada a quantidade total de itens vendidos e nao a quantidade de vezes que aparece na tabela de purchases
+
+POST /api/item : Create Item
+{
+  "name": "Sushi",
+  "price": 1000
+}
+- o preco é un numero inteiro multiplicado por 100 para as duas casas decimais dos centavos serem armazenadas no banco de dados
+- o preco de 1099 = 10,99
+- todos os precos tem que estar nesse formato
+
+PUT /api/item/<id> : Edit Item
+{
+  "name": "Sopa de Legumes",
+  "price": 1200
+}
+- Todas as edicoes suportam modificar apenas os parametros que foram passados
+- o preco é un numero inteiro multiplicado por 100 para as duas casas decimais dos centavos serem armazenadas no banco de dados
+- o preco de 1099 = 10,99
+- todos os precos tem que estar nesse formato
+
+DELETE /api/item/<id> : Delete Item
+- Hard delete, sera removido do banco de dados
+
+## PURCHASE
+
+GET /api/purchase/<id> : List Purchases by id
+- retorna apenas o obj de um item especificado pelo id
+
+GET /api/purchase/ : List All Purchases
+- quando nao se insere o id ele retornara Todos os items
+
+POST /api/purchase/ : Create Purchase
+{
+  "clientId": 45,
+  "itemId": 2,
+  "quantity": 1
+}
+- id do cliente que fez a compra
+- id do item que foi comprado
+- quantidade desse item que foi comprada
+- o preco do item é colocado no banco de dados automaticamente, refletindo o preco atual do item na tabela items
+
+PUT /api/purchase/ : Edit Purchase
+{
+  "clientId": 45,
+  "itemId": 2,
+  "quantity": 1
+}
+- Todas as edicoes suportam modificar apenas os parametros que foram passados
+
+DELETE /api/purchase/<id> : Delete Purchase
+- Hard delete, sera removido do banco de dados
