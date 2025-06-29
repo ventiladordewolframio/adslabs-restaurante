@@ -2,6 +2,28 @@ const service = require("../services/client")
 const cpfUtils = require('cpf-utils')
 //* PARSING THE INPUTS AND SENDING OUTPUTS, VALIDATION ESSENTIALY
 
+async function get(req, res) {
+    const { id } = req.params;
+
+    if (!id) {
+        return res.status(400).send({ message: "ID is required." });
+    }
+
+    if (id < 1) {
+        return res.status(400).send({ message: "ID must be a positive integer." });
+    }
+
+    try {
+        const client = await service.get(id);
+        if (!client) {
+            return res.status(404).send({ message: "Item não encontrado" });
+        }
+        return res.status(200).send({ client });
+    } catch (error) {
+        return res.status(500).send({ message: error.message });
+    }
+}
+
 async function listAll(req, res) {
     try {
         const clients = await service.listAll(req.query);
@@ -22,27 +44,31 @@ async function create(req, res) {
     }
 
     try {
-        const novoClient = await service.create({ name, cpf })
-        return res.status(201).send({ message: "Novo cliente criado com sucesso", client: novoClient })
+        const newClient = await service.create({ name, cpf })
+        return res.status(201).send({ message: "Novo cliente criado com sucesso", client: newClient })
     } catch (error) {
         return res.status(500).send({ message: error.message })
     }
 }
 
 async function update(req, res) {
-    const { name, cpf } = req.body;
+    const { name, cpf, ativo } = req.body;
     const { id } = req.params;
 
-    if (!name && !cpf) {
-        return res.status(400).send({ message: "At least one of Name or CPF is required to update." });
+    if (!name && !cpf && typeof ativo === "undefined") {
+        return res.status(400).send({ message: "At least one of Name, CPF, or ativo is required to update." });
     }
 
     if (cpf && !cpfUtils.isValid(cpf)) {
         return res.status(400).send({ message: "CPF is invalid." });
     }
 
+    if (typeof ativo !== "undefined" && typeof ativo !== "boolean") {
+        return res.status(400).send({ message: "Ativo must be a boolean value." });
+    }
+
     try {
-        const updatedClient = await service.update(id, { name, cpf });
+        const updatedClient = await service.update(id, { name, cpf, ativo });
         if (!updatedClient) {
             return res.status(404).send({ message: "Cliente não encontrado" });
         }
@@ -60,13 +86,14 @@ async function remove(req, res) {
         if (!removedClient) {
             return res.status(404).send({ message: "Cliente não encontrado" });
         }
-        return res.status(200).send({ message: "Cliente removido com sucesso", client: removedClient });
+        return res.status(200).send({ message: "Cliente removido com sucesso (soft delete)", client: removedClient });
     } catch (error) {
         return res.status(500).send({ message: error.message });
     }
 }
 
 module.exports = {
+    get,
     listAll,
     create,
     update,

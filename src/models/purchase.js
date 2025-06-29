@@ -13,7 +13,7 @@ const Purchase = database.define("purchases", {
         type: Sequelize.INTEGER,
         allowNull: false
     },
-    idItem: {
+    itemId: {
         type: Sequelize.INTEGER,
         allowNull: false
     },

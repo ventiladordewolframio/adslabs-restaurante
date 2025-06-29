@@ -2,8 +2,13 @@ const Client = require("../models/client")
 
 //* DIRECT DB CONNECTION AND STUFF
 
+async function get(id) {
+    const client = await Client.findByPk(id);
+    return client;
+}
+
 async function listAll(query = {}) {
-    // TODO needs a pagination version, and this one should be deprecated
+    // TODO needs a pagination version
     const clients = await Client.findAll();
     return clients;
 }
@@ -26,6 +31,7 @@ async function update(id, dados) {
     // Only update fields if they are provided
     if (dados.name !== undefined) client.name = dados.name;
     if (dados.cpf !== undefined) client.cpf = dados.cpf;
+    if (dados.ativo !== undefined) client.ativo = dados.ativo;
 
     await client.save();
     return client;
@@ -36,11 +42,13 @@ async function remove(id) {
     if (!client) {
         return null;
     }
-    await client.destroy();
+    client.ativo = false; // Marca como inativo (soft delete)
+    await client.save();
     return client;
 }
 
 module.exports = {
+    get,
     listAll,
     create,
     update,
