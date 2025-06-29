@@ -5,8 +5,6 @@ const ClientRouter = require('./routes/client');
 const ItemRouter = require('./routes/item');
 const PurchaseRouter = require('./routes/purchase');
 
-const cpfUtils = require('cpf-utils')
-
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));

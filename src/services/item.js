@@ -1,4 +1,4 @@
-// CORRECT (ensures associations are loaded)
+// (make sure associations are loaded)
 const { Item, Purchase } = require("../models");
 const { Sequelize } = require("sequelize");
 

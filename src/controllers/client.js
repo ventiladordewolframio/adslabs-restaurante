@@ -1,5 +1,4 @@
 const service = require("../services/client")
-const cpfUtils = require('cpf-utils')
 //* PARSING THE INPUTS AND SENDING OUTPUTS, VALIDATION ESSENTIALY
 
 async function get(req, res) {
@@ -69,13 +68,49 @@ async function listTop5ByTotalSpent(req, res) {
     }
 }
 
+function validarCPF(cpfInput) {
+
+    var Total = 0
+    var Resto
+
+    var cpf = String(cpfInput).replace(/[^\d]/g, '') // Remove tudo oq nao e numero
+
+    if (cpf.length !== 11) { return false }
+    if (cpf.split('').every(d => d === cpf[0])) { return false } // Verifica se todos os dígitos são iguais
+
+    for (i = 1; i <= 9; i++) { // soma e multiplicação pela posicao dos nove primeiros dígitos
+        Total = Total + parseInt(cpf.substring(i - 1, i)) * (11 - i);
+    }
+
+    Resto = (Total * 10) % 11
+    if ((Resto == 10) || (Resto == 11)) { // Se o resto for 10 ou 11, o resto é 0
+        Resto = 0
+    }
+
+    if (Resto != parseInt(cpf.substring(9, 10))) { return false } // Verifica se o resto é igual ao décimo dígito
+
+    Total = 0
+    for (i = 1; i <= 10; i++) { // Soma e multiplicação pela posição dos dez primeiros dígitos
+        Total = Total + parseInt(cpf.substring(i - 1, i)) * (12 - i)
+    }
+
+    Resto = (Total * 10) % 11
+    if ((Resto == 10) || (Resto == 11)) { // Se o resto for 10 ou 11, o resto é 0
+        Resto = 0
+    }
+
+    if (Resto != parseInt(cpf.substring(10, 11))) { return false } // Verifica se o resto é igual ao décimo primeiro dígito
+
+    return true
+}
+
 async function create(req, res) {
     const { name, cpf } = req.body
     if (!name || !cpf) {
         return res.status(400).send({ message: "Name and CPF are required." })
     }
 
-    if (!cpfUtils.isValid(cpf)) {
+    if (!validarCPF(cpf)) {
         return res.status(400).send({ message: "CPF is invalid." })
     }
 
@@ -95,7 +130,7 @@ async function update(req, res) {
         return res.status(400).send({ message: "At least one of Name, CPF, or ativo is required to update." });
     }
 
-    if (cpf && !cpfUtils.isValid(cpf)) {
+    if (cpf && !validarCPF(cpf)) {
         return res.status(400).send({ message: "CPF is invalid." });
     }
 

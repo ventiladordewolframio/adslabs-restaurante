@@ -24,7 +24,8 @@ POST /api/client : Create Client
   "name": "{% faker 'randomFullName' %}",
   "cpf": "{% randocpf false %}"
 }
-- parametros faker do insomnia, com um plugin especifico pro cpf do Brasil
+- parametros faker do insomnia, com um plugin especifico pro cpf do Brasil, apenas para gerar cpf pra preencher o banco de dados
+- CPF pode estar em qualquer um dos formatos "12345678912" ou "123-456-789.12" ou "123.456.789.12"
 
 PUT /api/client/<id> : Edit Client
 {
@@ -32,7 +33,8 @@ PUT /api/client/<id> : Edit Client
   "cpf": "{% randocpf false %}"
 }
 - Todas as edicoes suportam modificar apenas os parametros que foram passados
-- parametros faker do insomnia, com um plugin especifico pro cpf do Brasil
+- parametros faker do insomnia, com um plugin especifico pro cpf do Brasil, apenas para gerar cpf pra preencher o banco de dados
+- CPF pode estar em qualquer um dos formatos "12345678912" ou "123-456-789.12" ou "123.456.789.12"
 
 DELETE /api/client/<id> : Soft Delete Client
 - active = false
