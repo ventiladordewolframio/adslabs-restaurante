@@ -1,4 +1,5 @@
-const Client = require("../models/client")
+const { Client, Purchase } = require("../models");
+const { Sequelize } = require("sequelize");
 
 //* DIRECT DB CONNECTION AND STUFF
 
@@ -7,10 +8,61 @@ async function get(id) {
     return client;
 }
 
-async function listAll(query = {}) {
-    // TODO needs a pagination version
-    const clients = await Client.findAll();
+async function listAll(filter = {}) {
+    const clients = await Client.findAll({ where: filter });
     return clients;
+}
+
+async function listTop5ByOrders() {
+    const clients = await Purchase.findAll({
+        attributes: [
+            'clientId',
+            [Sequelize.fn('SUM', Sequelize.col('quantity')), 'totalQuantity']
+        ],
+        group: [
+            'clientId',
+            'client.id',
+            'client.name'
+        ],
+        order: [[Sequelize.fn('SUM', Sequelize.col('quantity')), 'DESC']],
+        limit: 5,
+        include: [{
+            model: Client,
+            as: 'client',
+            attributes: ['id', 'name']
+        }]
+    });
+
+    return clients.map(purchase => ({
+        client: purchase.client,
+        totalQuantity: Number(purchase.get('totalQuantity'))
+    }));
+}
+
+async function listTop5ByTotalSpent() {
+    const clients = await Purchase.findAll({
+        attributes: [
+            'clientId',
+            [Sequelize.fn('SUM', Sequelize.literal('quantity * price_individual')), 'totalSpent']
+        ],
+        group: [
+            'clientId',
+            'client.id',
+            'client.name'
+        ],
+        order: [[Sequelize.literal('SUM(quantity * price_individual)'), 'DESC']],
+        limit: 5,
+        include: [{
+            model: Client,
+            as: 'client',
+            attributes: ['id', 'name']
+        }]
+    });
+
+    return clients.map(purchase => ({
+        client: purchase.client,
+        totalSpent: Number(purchase.get('totalSpent'))
+    }));
 }
 
 async function create(dados) {
@@ -48,6 +100,8 @@ async function remove(id) {
 }
 
 module.exports = {
+    listTop5ByOrders,
+    listTop5ByTotalSpent,
     get,
     listAll,
     create,

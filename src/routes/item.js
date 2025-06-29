@@ -3,6 +3,7 @@ const controller = require('../controllers/item');
 
 const Router = express.Router();
 
+Router.get("/top", controller.listAllTop);
 Router.get("/:id", controller.get)
 Router.get("/", controller.listAll)
 Router.post("/", controller.create)

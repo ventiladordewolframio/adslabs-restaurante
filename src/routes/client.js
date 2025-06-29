@@ -7,6 +7,8 @@ const Router = express.Router();
 ////    res.send('Client route is working!');
 ////});
 
+Router.get("/top5orders", controller.listTop5ByOrders);
+Router.get("/top5spent", controller.listTop5ByTotalSpent);
 Router.get("/:id", controller.get)
 Router.get("/", controller.listAll)
 Router.post("/", controller.create)

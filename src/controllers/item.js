@@ -32,6 +32,15 @@ async function listAll(req, res) {
     }
 }
 
+async function listAllTop(req, res) {
+    try {
+        const items = await service.listAllTop(req.query);
+        return res.status(200).send({ dados: items });
+    } catch (error) {
+        return res.status(500).send({ message: error.message });
+    }
+}
+
 async function create(req, res) {
     const { name, price } = req.body
 
@@ -111,6 +120,7 @@ async function remove(req, res) {
 module.exports = {
     get,
     listAll,
+    listAllTop,
     create,
     update,
     remove

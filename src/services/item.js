@@ -1,4 +1,6 @@
-const Item = require("../models/item")
+// CORRECT (ensures associations are loaded)
+const { Item, Purchase } = require("../models");
+const { Sequelize } = require("sequelize");
 
 //* DIRECT DB CONNECTION AND STUFF
 
@@ -11,6 +13,32 @@ async function listAll(query = {}) {
     // TODO needs a pagination version
     const items = await Item.findAll();
     return items;
+}
+
+async function listAllTop() {
+    const items = await Purchase.findAll({
+        attributes: [
+            'itemId',
+            [Sequelize.fn('SUM', Sequelize.col('quantity')), 'totalQuantity']
+        ],
+        group: [
+            'itemId',
+            'item.id',
+            'item.name',
+            'item.price'
+        ],
+        order: [[Sequelize.fn('SUM', Sequelize.col('quantity')), 'DESC']],
+        include: [{
+            model: Item,
+            as: 'item',
+            attributes: ['id', 'name', 'price']
+        }]
+    });
+
+    return items.map(purchase => ({
+        item: purchase.item,
+        totalQuantity: Number(purchase.get('totalQuantity'))
+    }));
 }
 
 async function create(dados) {
@@ -48,6 +76,7 @@ async function remove(id) {
 module.exports = {
     get,
     listAll,
+    listAllTop,
     create,
     update,
     remove

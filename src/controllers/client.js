@@ -26,7 +26,43 @@ async function get(req, res) {
 
 async function listAll(req, res) {
     try {
-        const clients = await service.listAll(req.query);
+        const filter = {};
+        if (req.query.active === "true") {
+            filter.ativo = true;
+        } else if (req.query.active === "false") {
+            filter.ativo = false;
+        }
+        const clients = await service.listAll(filter);
+        return res.status(200).send({ dados: clients });
+    } catch (error) {
+        return res.status(500).send({ message: error.message });
+    }
+}
+
+async function listTop5ByOrders(req, res) {
+    try {
+        const filter = {};
+        if (req.query.active === "true") {
+            filter.ativo = true;
+        } else if (req.query.active === "false") {
+            filter.ativo = false;
+        }
+        const clients = await service.listTop5ByOrders(filter);
+        return res.status(200).send({ dados: clients });
+    } catch (error) {
+        return res.status(500).send({ message: error.message });
+    }
+}
+
+async function listTop5ByTotalSpent(req, res) {
+    try {
+        const filter = {};
+        if (req.query.active === "true") {
+            filter.ativo = true;
+        } else if (req.query.active === "false") {
+            filter.ativo = false;
+        }
+        const clients = await service.listTop5ByTotalSpent(filter);
         return res.status(200).send({ dados: clients });
     } catch (error) {
         return res.status(500).send({ message: error.message });
@@ -93,6 +129,8 @@ async function remove(req, res) {
 }
 
 module.exports = {
+    listTop5ByOrders,
+    listTop5ByTotalSpent,
     get,
     listAll,
     create,
