@@ -1,16 +1,7 @@
 const service = require("../services/item")
-//* PARSING THE INPUTS AND SENDING OUTPUTS, VALIDATION ESSENTIALY
 
 async function get(req, res) {
     const { id } = req.params;
-
-    if (!id) {
-        return res.status(400).send({ message: "ID is required." });
-    }
-
-    if ( id < 1) {
-        return res.status(400).send({ message: "ID must be a positive integer." });
-    }
 
     try {
         const item = await service.get(id);
@@ -44,22 +35,6 @@ async function listAllTop(req, res) {
 async function create(req, res) {
     const { name, price } = req.body
 
-    if (!name || !price) {
-        return res.status(400).send({ message: "Name and Price are required." })
-    }
-
-    if (!/^[\p{L}\s]+$/u.test(name)) {
-        return res.status(400).send({ message: "Name must contain only letters and spaces." });
-    }
-
-    if (name.length < 3 && name.length > 50) {
-        return res.status(400).send({ message: "Name must be at least 3 characters long." });
-    }
-
-    if (!Number.isInteger(price) || price <= 0) {
-        return res.status(400).send({ message: "Price must be a positive integer (multiplied by 100)." });
-    }
-
     try {
         const newItem = await service.create({ name, price })
         return res.status(201).send({ message: "Novo item criado com sucesso", item: newItem })
@@ -71,26 +46,6 @@ async function create(req, res) {
 async function update(req, res) {
     const { name, price } = req.body;
     const { id } = req.params;
-
-    if (!name && !price) {
-        return res.status(400).send({ message: "At least one of Name or Price is required to update." });
-    }
-
-    if (name) {// only validate if name is provided
-        if (!/^[a-zA-Z\s]+$/.test(name)) {
-            return res.status(400).send({ message: "Name must contain only letters and spaces." });
-        }
-
-        if (name.length < 3 && name.length > 50) {
-            return res.status(400).send({ message: "Name must be at least 3 characters long." });
-        }
-    }
-
-    if (price) {// only validate if price is provided
-        if (!Number.isInteger(price) || price <= 0) {
-            return res.status(400).send({ message: "Price must be a positive integer (multiplied by 100)." });
-        }
-    }
 
     try {
         const updatedItem = await service.update(id, { name, price });

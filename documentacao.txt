@@ -32,7 +32,6 @@ PUT /api/client/<id> : Edit Client
   "name": "{% faker 'randomFullName' %}",
   "cpf": "{% randocpf false %}"
 }
-- Todas as edicoes suportam modificar apenas os parametros que foram passados
 - parametros faker do insomnia, com um plugin especifico pro cpf do Brasil, apenas para gerar cpf pra preencher o banco de dados
 - CPF pode estar em qualquer um dos formatos "12345678912" ou "123-456-789.12" ou "123.456.789.12"
 
@@ -58,16 +57,17 @@ POST /api/item : Create Item
 - o preco é un numero inteiro multiplicado por 100 para as duas casas decimais dos centavos serem armazenadas no banco de dados
 - o preco de 1099 = 10,99
 - todos os precos tem que estar nesse formato
+- o preco pode ser 0, (intencional)
 
 PUT /api/item/<id> : Edit Item
 {
   "name": "Sopa de Legumes",
   "price": 1200
 }
-- Todas as edicoes suportam modificar apenas os parametros que foram passados
 - o preco é un numero inteiro multiplicado por 100 para as duas casas decimais dos centavos serem armazenadas no banco de dados
 - o preco de 1099 = 10,99
 - todos os precos tem que estar nesse formato
+- o preco pode ser 0, (intencional)
 
 DELETE /api/item/<id> : Delete Item
 - Hard delete, sera removido do banco de dados
@@ -97,7 +97,6 @@ PUT /api/purchase/ : Edit Purchase
   "itemId": 2,
   "quantity": 1
 }
-- Todas as edicoes suportam modificar apenas os parametros que foram passados
 
 DELETE /api/purchase/<id> : Delete Purchase
 - Hard delete, sera removido do banco de dados

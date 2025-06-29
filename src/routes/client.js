@@ -1,18 +1,40 @@
 const express = require('express');
+
 const controller = require('../controllers/client');
+const middlewareClient = require("../middleware/client")
+const middlewareUtil = require("../middleware/util")
 
 const Router = express.Router();
 
-////Router.get('/', (req, res) => {
-////    res.send('Client route is working!');
-////});
-
+// GET TOP 5 BY ORDERS
 Router.get("/top5orders", controller.listTop5ByOrders);
+// GET TOP 5 BY TOTAL SPENT
 Router.get("/top5spent", controller.listTop5ByTotalSpent);
-Router.get("/:id", controller.get)
+//GET BY ID
+Router.get("/:id",
+    middlewareUtil.validarId,
+    controller.get
+)
+//LIST ALL
 Router.get("/", controller.listAll)
-Router.post("/", controller.create)
-Router.put("/:id", controller.update)
-Router.delete("/:id", controller.remove)
+//CREATE
+Router.post("/",
+    middlewareClient.validarCPF,
+    middlewareClient.validarNome,
+    controller.create
+)
+// EDIT
+Router.put("/:id",
+    middlewareUtil.validarId,
+    middlewareClient.validarCPF,
+    middlewareClient.validarNome,
+    middlewareClient.validarAtivo,
+    controller.update
+)
+//DELETE
+Router.delete("/:id",
+    middlewareUtil.validarId,
+    controller.remove
+)
 
 module.exports = Router;
