@@ -3,14 +3,6 @@ const service = require("../services/client")
 async function get(req, res) {
     const { id } = req.params;
 
-    if (!id) {//!TO DELETE BECAUSE MIDDLEWARE
-        return res.status(400).send({ message: "ID is required." });
-    }
-
-    if (id < 1) {//!TO DELETE BECAUSE MIDDLEWARE
-        return res.status(400).send({ message: "ID must be a positive integer." });
-    }
-
     try {
         const client = await service.get(id);
         if (!client) {
