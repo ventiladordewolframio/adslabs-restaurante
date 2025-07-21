@@ -1,39 +1,37 @@
-# documentacao
+# documentation
 
-"<id>" representa o numero do id que sera substituido e nao parte da caminho
+"<id>" represents the number the id will be substituted and not part of the path
 
 ## CLIENT
 
 GET /api/client/<id> : List Client by id
-- retorna apenas o obj de um cliente especificado pelo id
+- only returns the object of a client specified by theid
 
 GET /api/client?active=true : List all Clients
-- quando nao se insere o id ele retornara Todos os clientes
-- tem o parametro opcional active, true or false
+- when you don't inset the id, it will return all clients
+- has the "active" optional parameter, that returns true or false
 
 GET /api/client/top5orders?active=true : List all top 5 clients by order
-- quando especifica /top5orders retornara os 5 clientes que compraram mais produtos por unidade (nao por compra)
-- tem o parametro opcional active, true or false
+- when specified "/top5orders", returns the top 5 clients that ordered the most units of product (not purchases)
+- has the "active" optional parameter, that returns true or false
 
 GET /api/client/top5spent?active=true : List all top 5 Clients by total spent
-- quando especificado /top5spent retorna os 5 clientes com mais dinheiro gasto total
-- tem o parametro opcional active, true or false
+- when specified "/top5spent", retuens all the top 5 clients that spent the most money
+- has the "active" optional parameter, that returns true or false
 
 POST /api/client : Create Client
 {
-  "name": "{% faker 'randomFullName' %}",
-  "cpf": "{% randocpf false %}"
+  "name": "string",
+  "cpf": "string"
 }
-- parametros faker do insomnia, com um plugin especifico pro cpf do Brasil, apenas para gerar cpf pra preencher o banco de dados
-- CPF pode estar em qualquer um dos formatos "12345678912" ou "123-456-789.12" ou "123.456.789.12"
+- the CPF can be in any of the formats "12345678912" or "123-456-789.12" or "123.456.789.12"
 
 PUT /api/client/<id> : Edit Client
 {
-  "name": "{% faker 'randomFullName' %}",
-  "cpf": "{% randocpf false %}"
+  "name": "string",
+  "cpf": "string"
 }
-- parametros faker do insomnia, com um plugin especifico pro cpf do Brasil, apenas para gerar cpf pra preencher o banco de dados
-- CPF pode estar em qualquer um dos formatos "12345678912" ou "123-456-789.12" ou "123.456.789.12"
+- the CPF can be in any of the formats "12345678912" or "123-456-789.12" or "123.456.789.12"
 
 DELETE /api/client/<id> : Soft Delete Client
 - active = false
@@ -41,62 +39,62 @@ DELETE /api/client/<id> : Soft Delete Client
 ## ITEM
 
 GET /api/item/<id> : List Item by id
-- retorna apenas o obj de um item especificado pelo id
+- only returns the object of the item specified by id
 
 GET /api/item : List All Items
-- quando nao se insere o id ele retornara Todos os items
+- when you don't inset the id it returns all items
 
 GET /api/item/top : List All Items by Order Quantity
-- é usada a quantidade total de itens vendidos e nao a quantidade de vezes que aparece na tabela de purchases
+- the total amount of items sold is used instead of the amount of times they appear at the purchases table
 
 POST /api/item : Create Item
 {
-  "name": "Sushi",
-  "price": 1000
+  "name": "string",
+  "price": int
 }
-- o preco é un numero inteiro multiplicado por 100 para as duas casas decimais dos centavos serem armazenadas no banco de dados
-- o preco de 1099 = 10,99
-- todos os precos tem que estar nesse formato
-- o preco pode ser 0, (intencional)
+- the price is an int multiplyed by 100, because the two decimal cases needs to be stored on the database
+  the price of 1099 = 10,99
+  (all prices must be in this format)
+- the price can be 0, (intentional, if necessary on business logic)
 
 PUT /api/item/<id> : Edit Item
 {
-  "name": "Sopa de Legumes",
-  "price": 1200
+  "name": "string",
+  "price": int
 }
-- o preco é un numero inteiro multiplicado por 100 para as duas casas decimais dos centavos serem armazenadas no banco de dados
-- o preco de 1099 = 10,99
-- todos os precos tem que estar nesse formato
-- o preco pode ser 0, (intencional)
+- the price is an int multiplyed by 100, because the two decimal cases needs to be stored on the database
+  the price of 1099 = 10,99
+  (all prices must be in this format)
+- the price can be 0, (intentional, if necessary on business logic)
 
 DELETE /api/item/<id> : Delete Item
-- Hard delete, sera removido do banco de dados
+- Hard delete, will be removed from the database
 
 ## PURCHASE
 
 GET /api/purchase/<id> : List Purchases by id
-- retorna apenas o obj de um item especificado pelo id
+- returns only the object of an item specified by id
 
 GET /api/purchase/ : List All Purchases
-- quando nao se insere o id ele retornara Todos os items
+- when you dont insert the id it reurns all of them
 
 POST /api/purchase/ : Create Purchase
 {
-  "clientId": 45,
-  "itemId": 2,
-  "quantity": 1
+  "clientId": int,
+  "itemId": int,
+  "quantity": int
 }
-- id do cliente que fez a compra
-- id do item que foi comprado
-- quantidade desse item que foi comprada
-- o preco do item é colocado no banco de dados automaticamente, refletindo o preco atual do item na tabela items
+- id of the client who made the purchase
+- id of the item bought
+- quantity of the item bought
+- the price of the item is put on the database automatically, reflecting the current price of the item in the items table
 
 PUT /api/purchase/ : Edit Purchase
 {
-  "clientId": 45,
-  "itemId": 2,
-  "quantity": 1
+  "clientId": int,
+  "itemId": int,
+  "quantity": int
 }
 
 DELETE /api/purchase/<id> : Delete Purchase
-- Hard delete, sera removido do banco de dados
+- Hard delete, will be removed from the database
