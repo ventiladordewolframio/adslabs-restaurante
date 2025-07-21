@@ -24,6 +24,7 @@ POST /api/client : Create Client
   "name": "string",
   "cpf": "string"
 }
+- the name must be within 3-100 char
 - the CPF can be in any of the formats "12345678912" or "123-456-789.12" or "123.456.789.12"
 
 PUT /api/client/<id> : Edit Client
@@ -31,6 +32,7 @@ PUT /api/client/<id> : Edit Client
   "name": "string",
   "cpf": "string"
 }
+- the name must be within 3-100 char
 - the CPF can be in any of the formats "12345678912" or "123-456-789.12" or "123.456.789.12"
 
 DELETE /api/client/<id> : Soft Delete Client
@@ -52,6 +54,7 @@ POST /api/item : Create Item
   "name": "string",
   "price": int
 }
+- the name must be within 3-50 char
 - the price is an int multiplyed by 100, because the two decimal cases needs to be stored on the database
   the price of 1099 = 10,99
   (all prices must be in this format)
@@ -62,6 +65,7 @@ PUT /api/item/<id> : Edit Item
   "name": "string",
   "price": int
 }
+- the name must be within 3-50 char
 - the price is an int multiplyed by 100, because the two decimal cases needs to be stored on the database
   the price of 1099 = 10,99
   (all prices must be in this format)
