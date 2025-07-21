@@ -60,6 +60,10 @@ function validarNome(req, res, next) {
         return res.status(400).send({ message: "Name must be a non-empty string." });
     }
 
+    if (name.length < 3 || name.length > 100) {
+        return res.status(400).send({ message: "Name must be between 3 and 100 characters." });
+    }
+
     next();
 }
 
